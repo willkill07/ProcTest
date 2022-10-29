@@ -2,64 +2,16 @@
 
 int main() {
   framework grader{true};
-
-  grader.scenario("Outer", [&] {
+  grader.scenario("Outer 1", [&] {
     grader.given("Inner 1", [&] {
-      grader.when(10, "Part 1", [&] {
-        grader.then("A", [&] {
-          grader.require("this is true", true);
+      grader.when("Part 2", [&] {
+        grader.then(10, "A", [&] {
+          int* x;
+          std::cout << *x << std::endl;
           grader.require("this is false", false);
         });
-        grader.then("B", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("C", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-      });
-      grader.when(10, "Part 2", [&] {
-        grader.then("A", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("B", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("C", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-      });
-    });
-    grader.given("Inner 2", [&] {
-      grader.when(10, "Part 1", [&] {
-        grader.then("A", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("B", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("C", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-      });
-      grader.when(10, "Part 2", [&] {
-        grader.then("A", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("B", [&] {
-          grader.require("this is true", true);
-          grader.require("this is false", false);
-        });
-        grader.then("C", [&] {
-          grader.require("this is true", true);
+        grader.then(10, "B", [&] {
+          while (true) {}
           grader.require("this is false", false);
         });
       });
