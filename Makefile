@@ -1,12 +1,15 @@
-CXXFLAGS := -Os -g -std=c++17 -Wall -Wextra -Wpedantic -Wconversion
+CXXFLAGS := -Os -std=c++17 -Wall -Wextra -Wpedantic -Wconversion
 
 .PHONY: all clean
 
 LINK.o := $(CXX) $(CXXFLAGS)
 
-all : test
+all : example
 
-test.o : proc_test.hpp
+example : example.o proc_test.o
+
+proc_test.o : proc_test.hpp
+example.o : proc_test.hpp
 
 clean :
-	-rm -rf test test.o
+	-rm -rf example example.o
