@@ -167,7 +167,7 @@ class framework {
   int                      level{0};
   bool                     verbose{false};
   int                      time_limit{1000};
-  bool                     passed{true};
+  std::optional<bool>      passed{std::nullopt};
   int                      snd_fd{-1};
   int                      rcv_fd{-1};
   test_metrics             metrics;
@@ -232,8 +232,9 @@ class framework {
     ++level;
 
     points_specified = points_specified || (points != 0);
+    passed = std::nullopt;
     metrics.reset();
-    if (points_specified) {
+    if (points_specified and points != 0) {
       ++metrics.total_tests;
       metrics.total_points += points;
     }
@@ -242,9 +243,9 @@ class framework {
 
     if (points_specified) {
       if (points == 0) {
-        send(passed);
+        send(passed.value_or(false));
       } else {
-        if (passed) {
+        if (passed.value_or(false)) {
           metrics.earned_points += points;
           ++metrics.passed_tests;
         } else {
@@ -314,7 +315,11 @@ class framework {
                                    return true;
                                  },
                                  [&](serializable_bool const& child_passed) noexcept {
-                                   passed = passed && child_passed;
+                                   if (passed.has_value()) {
+                                     passed = passed && child_passed;
+                                   } else {
+                                     passed = child_passed;
+                                   }
                                    return true;
                                  }};
     while (std::visit(overload_set, receive())) {
@@ -380,14 +385,6 @@ public:
 
   template <typename Callable> void then(std::string const& description, Callable&& nesting) noexcept {
     operator()("Then: " + description, std::forward<Callable>(nesting));
-  }
-
-  template <typename Callable> void scenario(int points, std::string const& description, Callable&& nesting) noexcept {
-    operator()(points, "Scenario: " + description, std::forward<Callable>(nesting));
-  }
-
-  template <typename Callable> void given(int points, std::string const& description, Callable&& nesting) noexcept {
-    operator()(points, "Given: " + description, std::forward<Callable>(nesting));
   }
 
   template <typename Callable> void when(int points, std::string const& description, Callable&& nesting) noexcept {
