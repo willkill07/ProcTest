@@ -147,18 +147,12 @@ using serializable_types        = std::variant<std::monostate, serializable_stri
 
 namespace detail {
 template <packet_header> struct type_for;
-template <> struct type_for<packet_header::string> {
-  using type = serializable_string;
-};
-template <> struct type_for<packet_header::test_metrics> {
-  using type = serializable_test_metrics;
-};
+template <> struct type_for<packet_header::string> { using type = serializable_string; };
+template <> struct type_for<packet_header::test_metrics> { using type = serializable_test_metrics; };
 } // namespace detail
 template <packet_header PH> using type_for = typename detail::type_for<PH>::type;
 
-template <typename... OverloadSet> struct Overload : OverloadSet... {
-  using OverloadSet::operator()...;
-};
+template <typename... OverloadSet> struct Overload : OverloadSet... { using OverloadSet::operator()...; };
 template <class... OverloadSet> Overload(OverloadSet...) -> Overload<OverloadSet...>;
 
 class framework {
@@ -232,7 +226,7 @@ class framework {
     ++level;
 
     points_specified = points_specified || (points != 0);
-    passed = std::nullopt;
+    passed           = std::nullopt;
     metrics.reset();
     if (points_specified and points != 0) {
       ++metrics.total_tests;
